@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<div class="row">
+    <div class="col s12 m4 offset-m4">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+        <div class="card">
+            <div class="card-action teal lighten-1 white-text"><h4>Add Here</h4></div>
+            <form class="" action="{% url 'core:register' %}" method="post">
+                {% csrf_token %}
+                <div class="card-content">
+                    <div class="row">
+                        <div class="input-field">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input id="username" name="username" type="text" class="validate" required>
+                            <label for="username">Team's Username</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            <i class="material-icons prefix">lock</i>
+                            <input id="password" name="password" type="password" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn waves-effect waves-light" type="submit" style="margin-left: 90px">
+                        Add
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('select').formSelect();
+    });
+</script>
+</body>
+</html>

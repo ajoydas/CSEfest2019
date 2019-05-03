@@ -1,0 +1,14 @@
+<script>
+    {% for message in messages %}
+        toastr.options.showMethod = 'slideDown';
+        toastr.options.hideMethod = 'slideUp';
+        toastr.options.progressBar = true;
+        {% if message.tags == 'error' %}
+            toastr.error( '{{ message }}' );
+        {% elif message.tags == 'success'%}
+            toastr.success( '{{ message }}' );
+        {% elif message.tags == 'info'%}
+            toastr.info( '{{ message }}' );
+        {% endif %}
+    {% endfor %}
+</script>

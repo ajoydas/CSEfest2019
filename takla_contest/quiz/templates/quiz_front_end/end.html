@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<div class="row">
+    <div class="col s12 m6 offset-m3">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+
+
+        <div id="learn_more">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Finished :(</span>
+                    <p>The contest has ended. The result will be published soon.....</p>
+                </div>
+            </div>
+        </div>
+
+{#        <img class="materialboxed" width="480" height="200" src="{{ img_url }}" style="margin-top: 50px">#}
+
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,395 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
+
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.core.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<style>
+    .modal {
+        max-width: 75% !important;
+        max-height: 100% !important;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    img.center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+</style>
+<div class="row">
+
+    <div class="col s12 m6 offset-m3">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+
+        <!-- show meme -->
+        <ul>
+            <li hidden><a id="demo02" href="#modal1">Modal</a></li>
+        </ul>
+        <div id='modal1'></div>
+        <div id="learn_more">
+            {#            Contents will be added dynamically        #}
+
+            {#                        <div class="card blue-grey darken-1">#}
+            {#                <div class="card-content white-text">#}
+            {#                    <span class="card-title">Details</span>#}
+            {#                    <p>This photo is related to.....</p>#}
+            {#                </div>#}
+            {#                <div class="card-action">#}
+            {#                    <a href="#">Learn More</a>#}
+            {#                </div>#}
+            {#            </div>#}
+
+        </div>
+        {% if title != 'none' %}
+            <div id="title">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title" style="text-align: center">{{ title }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <img class="materialboxed center" src="{{ img_url }}" style="margin-top: 50px; max-width:100%;">
+
+        <form class="center" id="puzzle_form" name="puzzle_form" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field">
+                    <i class="material-icons prefix">sentiment_very_satisfied</i>
+                    <input id="answer" name="answer" type="text" class="validate" required style="max-width: 250px">
+                    <label for="answer" style="text-align: center;">Your answer here...</label>
+                </div>
+            </div>
+            <div class="row">
+                <button id="submit_button" class="btn waves-effect waves-light" type="submit">
+                    Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </form>
+        <br/>
+        <div class="center">
+            <a href="{% url 'puzzle:show_puzzle' pk|add:1 %}">
+                <div id="next_button"></div>
+            </a>
+        </div>
+
+        {% if fun_fact != 'none' %}
+            <div id="fun_fact">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Do you know?</span>
+                        <p>{{ fun_fact }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% if music != 'none' %}
+    {#    <audio tabindex="0" id="music" preload="auto">#}
+    {#        <source src="{{ music }}">#}
+    {#    </audio>#}
+    {#         <audio tabindex="0" id="music" controls preload="auto"><source src="{{ music }}"></audio>#}
+
+    <script>
+        var meme_sound;
+        var was_playing = false;
+
+        var sound = new Howl({
+            src: ['{{ music }}'],
+            autoplay: true,
+            loop: true,
+            volume: 0.5,
+            onplay: function () {
+                {#console.log($("#player").text());#}
+                $("#player").text("Stop");
+            },
+            onplayerror: function () {
+                sound.once('unlock', function () {
+                    sound.play();
+                });
+            }
+        });
+        sound.play();
+    </script>
+
+{% endif %}
+
+
+
+<script>
+
+    function closedModal() {
+        console.log("Closed modal");
+        console.log(typeof meme_sound);
+        if (typeof meme_sound !== 'undefined') {
+            // the back music is playing
+            if (meme_sound.playing()) {
+                meme_sound.stop();
+            }
+
+            if (typeof sound !== 'undefined') {
+                // start the back music
+                console.log(typeof was_playing);
+                if (was_playing === true) {
+                    console.log("Restarting bg.");
+
+                    change_player();
+                }
+            }
+        }
+    }
+
+
+    $(document).ready(function () {
+        $('.materialboxed').materialbox();
+        $('select').formSelect();
+
+        // Submit post on submit
+        $('#puzzle_form').on('submit', function (event) {
+            event.preventDefault();
+            console.log("form submitted!"); // sanity check
+            $('form :submit').attr("disabled", "disabled");
+            puzzle_submit();
+
+        });
+
+
+        // AJAX for posting
+        function puzzle_submit() {
+            console.log("puzzle submit is working!"); // sanity check
+            $.ajax({
+                url: "/submit_puzzle/{{ pk }}/", // the endpoint
+                type: "POST", // http method
+                data: {answer: $('#answer').val()}, // data sent with the post request
+                // handle a successful response
+                success: function (json) {
+                    // enable the form
+                    {#$('#answer').val(''); // remove the value from the input#}
+                    console.log(json); // log the returned json to the console
+                    if (json.result === "success") {
+                        console.log("success");
+                        // show success button
+                        $("#next_button").prepend("<button id='next' class='btn waves-effect waves-light center' type='submit' >" +
+                            "Next" +
+                            "<i class='material-icons right'>arrow_forward</i>" +
+                            "</button>");
+                        $("#answer").hide();
+                        $("#submit_button").hide();
+                        $("#puzzle_form").hide();
+
+
+                        // show floating error message
+                        toastr.options.showMethod = 'slideDown';
+                        toastr.options.hideMethod = 'slideUp';
+                        toastr.options.progressBar = true;
+                        toastr.success('Congrats! You got it.');
+
+
+                        // show info if sent
+                        if (json.show_info === "yes") {
+                            let _html = "<!-- Card Structure -->";
+                            _html += "<div class='card blue-grey darken-1'>";
+                            _html += "<div class='card-content white-text'>";
+                            _html += "<span class='card-title'>Details</span>";
+                            if (json.info !== "none") _html += "<p>" + json.info + "</p>";
+                            if (json.info_link !== "none") {
+                                _html += "<div class=\"card-action\">";
+                                _html += "<a href='" + json.info_link + "'>Learn More</a>";
+                                _html += "</div>";
+                            }
+                            _html += "</div>";
+                            _html += "</div>";
+
+                            $('#learn_more').empty();
+                            $('#learn_more').append(_html);
+                        }
+                    }
+                    else {
+                        console.log("failure");
+                        // show floating error message
+                        toastr.options.showMethod = 'slideDown';
+                        toastr.options.hideMethod = 'slideUp';
+                        toastr.options.progressBar = true;
+                        toastr.error('Nope! Try Again.');
+                    }
+
+                    // show meme if sent
+                    if (json.meme === "true") {
+                        // add modal
+                        if (json.meme_text !== "none" || json.meme_image !== "none") {
+                            // add the error to the dom
+                            {#let _html = "<!-- Modal Structure -->";#}
+                            {#_html += "<div class='modal-content center'>";#}
+                            {#if (json.meme_text !== "none") {#}
+                            {#    _html += "<h4>" + json.meme_text + "</h4>";}#}
+                            {#_html += "<div><img src='" + json.meme_image + "'></div>";#}
+                            {#_html += "</div>";#}
+                            {#_html += "<div class='modal-footer'>";#}
+                            {#_html += "<a href='#!' class='modal-close waves-effect waves-green btn-flat' >Close</a>";#}
+                            {#_html += "</div>"#}
+
+                            let _html = "<!-- Modal Structure -->";
+                            _html += "<div class=\"modal-content\">";
+                            _html += "<div class=\"center\" style=\"margin-left: 10%; margin-right: 10%\">";
+                            if (json.meme_text !== "none") {
+                                _html += "<h4>" + json.meme_text + "</h4>";
+                            }
+                            _html += "<img style=\"max-width:100%; max-height: 80%\" src='" + json.meme_image + "'/>";
+                            _html += "<div style=\"margin-top: 2%\">";
+                            _html += "<button class=\"close-modal1 btn black waves-effect waves-light\" onclick=\"closedModal()\"> Close </button>";
+                            _html += "</div>";
+                            _html += "</div>";
+                            _html += "</div>";
+
+                            $('#error').ready(function () {
+                                options = {dismissible: true, onCloseEnd: closedModal};
+                                $('#modal1').empty();
+                                $('#modal1').append(_html);
+                                $("#demo02").animatedModal({
+                                    animatedIn: 'lightSpeedIn',
+                                    animatedOut: 'bounceOutDown',
+                                    color: '#edf0f8',
+                                    // Callbacks
+                                    beforeOpen: function () {
+                                        console.log("The animation was called");
+                                    },
+                                    afterOpen: function () {
+                                        console.log("The animation is completed");
+                                    },
+                                    beforeClose: function () {
+                                        console.log("The animation was called");
+                                    },
+                                    afterClose: function () {
+                                        console.log("The animation is completed");
+                                    }
+                                });
+                                $("#demo02").click();
+                            });
+                        }
+
+                        // add meme music
+                        if (json.meme_sound !== "none") {
+                            if (typeof sound !== 'undefined') {
+                                // the back music is playing
+                                was_playing = sound.playing();
+                                if (was_playing === true) {
+                                    change_player();
+                                }
+                            }
+
+                            meme_sound = new Howl({
+                                src: [json.meme_sound],
+                                autoplay: true,
+                                volume: 0.5,
+                            });
+                            meme_sound.play();
+                        }
+                    }
+
+                    $('form :submit').removeAttr("disabled");
+
+                },
+
+                // hale a non-successful response
+                error: function (xhr, errmsg, err) {
+                    // show floating error message
+                    toastr.options.showMethod = 'slideDown';
+                    toastr.options.hideMethod = 'slideUp';
+                    toastr.options.progressBar = true;
+                    toastr.error('Encountered Network Error! Please reload.');
+                }
+            });
+        }
+
+
+        // This function gets cookie with a given name
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                let cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        let csrftoken = getCookie('csrftoken');
+
+        /*
+        The functions below will create a header with csrftoken
+        */
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function sameOrigin(url) {
+            // test that a given url is a same-origin URL
+            // url could be relative or scheme relative or absolute
+            let host = document.location.host; // host + port
+            let protocol = document.location.protocol;
+            let sr_origin = '//' + host;
+            let origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                    // Send the token to same-origin, relative URLs only.
+                    // Send the token only if the method warrants CSRF protection
+                    // Using the CSRFToken value acquired earlier
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+    })
+    ;
+</script>
+
+<script src="/static/js/animatedModal.min.js"></script>
+
+
+</body>
+</html>

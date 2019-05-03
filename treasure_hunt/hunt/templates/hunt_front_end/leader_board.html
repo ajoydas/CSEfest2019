@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<style>
+
+</style>
+<div class="row">
+    <div class="col s12 m6 offset-m3">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+
+        <div>
+            <table class="centered highlight">
+                <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Team Name</th>
+                    <th>Section</th>
+                    <th>Level</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for team in teams %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ team.user.username }}</td>
+                        <td>{{ team.user.first_name }}</td>
+                        <td>{{ team.level_completed }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.materialboxed').materialbox();
+    });
+
+    $(document).ready(function () {
+        $('select').formSelect();
+    });
+</script>
+{#    <script type="text/javascript" src="{% static 'js/puzzle_submission.js' %}"></script>#}
+{#<script>#}
+{##}
+{#    function closedModal() {#}
+{#        console.log("Closed modal");#}
+{#        var beepOne = $("#beep-one")[0];#}
+{#        beepOne.pause();#}
+{#        beepOne.currentTime = 0;#}
+{#    }#}
+{##}
+{##}
+{#    $(document).ready(function () {#}
+{##}
+{##}
+{#        // Submit post on submit#}
+{#        $('#puzzle_form').on('submit', function (event) {#}
+{#            event.preventDefault();#}
+{#            console.log("form submitted!"); // sanity check#}
+{#            puzzle_submit();#}
+{#        });#}
+{##}
+{##}
+{#        // AJAX for posting#}
+{#        function puzzle_submit() {#}
+{#            console.log("puzzle submit is working!"); // sanity check#}
+{#            $.ajax({#}
+{#                url: "/submit_puzzle/{{ pk }}/", // the endpoint#}
+{#                type: "POST", // http method#}
+{#                data: {answer: $('#answer').val()}, // data sent with the post request#}
+{#                // handle a successful response#}
+{#                success: function (json) {#}
+{#                    $('#answer').val(''); // remove the value from the input#}
+{#                    console.log(json); // log the returned json to the console#}
+{#                    if (json.result === "success") {#}
+{#                        $("#next_button").prepend("<button id=\"next\" class=\"btn waves-effect waves-light\" type=\"submit\" style=\"margin-left: 100px\">\n" +#}
+{#                            "            Next\n" +#}
+{#                            "            <i class=\"material-icons right\">arrow_forward</i>\n" +#}
+{#                            "        </button>");#}
+{#                        $("#answer").hide();#}
+{#                        $("#submit_button").hide();#}
+{#                        console.log("success"); // another sanity check#}
+{#                    }#}
+{#                    else {#}
+{##}
+{##}
+{##}
+{#                        // add the error to the dom#}
+{#                        let _html = "<!-- Modal Structure -->";#}
+{#                        _html += "<div class='modal-content'>";#}
+{#                        _html += "<h4>কি ভাবসিলা, হয়ে যাবে ?</h4>";#}
+{#                        _html += "<div><img src='{% static 'image/meme/hacking/hack1.jpg' %}'></div>";#}
+{#                        _html += "</div>";#}
+{#                        _html += "<div class='modal-footer'>";#}
+{#                        _html += "<a href='#!' class='modal-close waves-effect waves-green btn-flat' >Close</a>";#}
+{#                        _html += "</div>";#}
+{##}
+{##}
+{#                        $('#error').ready(function () {#}
+{#                            var beepOne = $("#beep-one")[0];#}
+{#                            beepOne.play();#}
+{##}
+{#                            options = {dismissible: true, onCloseEnd: closedModal};#}
+{#                            $('#modal1').empty();#}
+{#                            $('#modal1').append(_html);#}
+{#                            let Modalelem = document.querySelector('#modal1');#}
+{#                            let instance = M.Modal.init(Modalelem, options);#}
+{#                            instance.open();#}
+{#                        });#}
+{#                        console.log("failure")#}
+{#                    }#}
+{#                },#}
+{#                // skip it#}
+{#                // handle a non-successful response#}
+{#                error: function (xhr, errmsg, err) {#}
+{#                    $('#error').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +#}
+{#                        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom#}
+{#                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console#}
+{#                }#}
+{#            });#}
+{#        }#}
+{##}
+{##}
+{#        // This function gets cookie with a given name#}
+{#        function getCookie(name) {#}
+{#            let cookieValue = null;#}
+{#            if (document.cookie && document.cookie != '') {#}
+{#                let cookies = document.cookie.split(';');#}
+{#                for (let i = 0; i < cookies.length; i++) {#}
+{#                    let cookie = jQuery.trim(cookies[i]);#}
+{#                    // Does this cookie string begin with the name we want?#}
+{#                    if (cookie.substring(0, name.length + 1) == (name + '=')) {#}
+{#                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));#}
+{#                        break;#}
+{#                    }#}
+{#                }#}
+{#            }#}
+{#            return cookieValue;#}
+{#        }#}
+{##}
+{#        let csrftoken = getCookie('csrftoken');#}
+{##}
+{#        /*#}
+{#        The functions below will create a header with csrftoken#}
+{#        */#}
+{##}
+{#        function csrfSafeMethod(method) {#}
+{#            // these HTTP methods do not require CSRF protection#}
+{#            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));#}
+{#        }#}
+{##}
+{#        function sameOrigin(url) {#}
+{#            // test that a given url is a same-origin URL#}
+{#            // url could be relative or scheme relative or absolute#}
+{#            let host = document.location.host; // host + port#}
+{#            let protocol = document.location.protocol;#}
+{#            let sr_origin = '//' + host;#}
+{#            let origin = protocol + sr_origin;#}
+{#            // Allow absolute or scheme relative URLs to same origin#}
+{#            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||#}
+{#                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||#}
+{#                // or any other URL that isn't scheme relative or absolute i.e relative.#}
+{#                !(/^(\/\/|http:|https:).*/.test(url));#}
+{#        }#}
+{##}
+{#        $.ajaxSetup({#}
+{#            beforeSend: function (xhr, settings) {#}
+{#                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {#}
+{#                    // Send the token to same-origin, relative URLs only.#}
+{#                    // Send the token only if the method warrants CSRF protection#}
+{#                    // Using the CSRFToken value acquired earlier#}
+{#                    xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{##}
+{#    })#}
+{#    ;#}
+{#</script>#}
+</body>
+</html>

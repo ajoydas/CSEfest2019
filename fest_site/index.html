@@ -1,0 +1,146 @@
+<!doctype>
+<html>
+<head>
+
+	<title>CSE Fest 2019</title>
+	<meta name="description" content="CSE Fest 2019, organized by BUET CSE'14"/>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<meta charset="utf-8">
+	<link rel="icon" type="image/png" href="social/favicon.png">
+
+	<meta itemprop="name" content="CSE Fest 2019">
+	<meta itemprop="description" content="CSE Fest 2019, organized by BUET CSE'14">
+	<meta itemprop="image" content="http://csefest2019.com/social/favicon.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<!--<meta name="twitter:site" content="@ncasenmare">-->
+	<meta name="twitter:title" content="CSE Fest 2019">
+	<meta name="twitter:description" content="CSE Fest 2019, organized by BUET CSE'14">
+	<!--<meta name="twitter:creator" content="@ncasenmare">-->
+
+	<!--
+	==========================================================
+	change the following
+	==========================================================
+	-->
+	<meta name="twitter:image" content="http://csefest2019.com/social/favicon.png">
+
+	<meta property="og:title" content="CSE Fest 2019">
+	<meta property="og:type" content="website">
+
+	<!--
+	==========================================================
+	change the following
+	==========================================================
+	-->
+	<meta property="og:url" content="http://csefest2019.com/">
+	<meta property="og:image" content="http://csefest2019.com/social/favicon.png">
+
+	<meta property="og:description" content="CSE Fest 2019, organized by BUET CSE'14">
+
+	<!-- Styles -->
+	<link rel="stylesheet" href="css/slides.css?v11">
+	<link rel="stylesheet" href="css/balloon.css?v11">
+
+</head>
+<body>
+	<div id="preloader">loading...</div>
+	<div style="display:none" id="main">
+		<div id="slideshow_container">
+			<div id="slideshow"></div>
+			<div id="scratcher"></div>
+		</div>
+	</div>
+	<div style="display:none" id="footer">
+		<div id="sound" sound="on" class="no-select">
+			<!--<div id="sound_icon"></div>-->
+			<!--<div id="sound_on">ON</div>-->
+			<!--<div id="sound_off">OFF</div>-->
+		</div>
+		<div id="select"></div>
+
+		<!--<sharing title="The Evolution of Trust"-->
+				 <!--text="People no longer trust each other. Why? And how can we fix it? An interactive guide to the game theory of trust:"-->
+				 <!--link="http://ncase.me/trust/"></sharing>-->
+
+		<!-- List of translations thus far! -->
+		<div id="translations">
+			<span class="">
+                <span class="black"><div class="type_wrap" style="font-size: 25px">
+                    <div id="typed_strings" class="text_container">
+                        <span>root@csefest2019:# Welcome to the CSE Fest 2019</span>
+                    </div>
+                    <span id="typed" style="white-space:pre;"></span>
+                </div></span>
+            </span>
+		</div>
+	</div>
+</body>
+</html>
+
+<!-- Libraries -->
+<script src="js/lib/helpers.js?v11"></script>
+<script src="js/lib/pegasus.js?v11"></script>
+<script>var c_ = {};</script>
+<script src="js/lib/minpubsub.src.js?v11"></script>
+<script src="js/lib/q.js?v11"></script>
+<script src="js/lib/pixi.min.js?v11"></script>
+<script src="js/lib/howler.js?v11"></script>
+<script>var createjs = window;</script>
+<script src="js/lib/tweenjs-0.6.2.min.js?v11"></script>
+<script>Ticker.framerate=60; Ticker.paused=true;</script>
+<script src="js/lib/sharing.js?v11"></script>
+<script src="js/lib/typed.js?v11"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		new Typed('#typed', {
+			stringsElement: '#typed_strings',
+			typeSpeed: 50,
+			backSpeed: 30,
+			startDelay: 1000,
+			loop: true,
+			loopCount: Infinity,
+		});
+
+
+	});
+</script>
+
+<!-- Core Engine -->
+<script src="js/core/Loader.js?v11"></script>
+<script src="js/core/Slideshow.js?v11"></script>
+<script src="js/core/SlideSelect.js?v11"></script>
+<script src="js/core/Button.js?v11"></script>
+<script src="js/core/TextBox.js?v11"></script>
+<script src="js/core/Words.js?v11"></script>
+<script src="js/core/IncDecNumber.js?v11"></script>
+<script src="js/core/Slider.js?v11"></script>
+<script src="js/core/Scratcher.js?v11"></script>
+<script src="js/core/Background.js?v11"></script>
+<script src="js/core/ImageBox.js?v11"></script>
+<script src="js/core/PayoffsUI.js?v11"></script>
+
+<!-- Simulations -->
+<script src="js/sims/Splash.js?v11"></script>
+<script src="js/sims/PD.js?v11"></script>
+<!--<script src="js/sims/Iterated.js?v11"></script>-->
+<!--<script src="js/sims/Tournament.js?v11"></script>-->
+<!--<script src="js/sims/SandboxUI.js?v11"></script>-->
+
+<!-- Slides -->
+<script src="js/slides/0_Slides_Intro.js?v11"></script>
+<script src="js/slides/1_Slides_iupc.js?v11"></script>
+<script src="js/slides/2_Slides_informatics.js?v11"></script>
+<script src="js/slides/3_Slides_unknown_prog.js?v11"></script>
+<script src="js/slides/4_Slides_hackathon.js?v11"></script>
+<script src="js/slides/5_Slides_robotics.js?v11"></script>
+<script src="js/slides/6_Slides_aicontest.js?v11"></script>
+<script src="js/slides/7_Slides_ideacontest.js?v11"></script>
+<script src="js/slides/8_Slides_poster.js?v11"></script>
+<script src="js/slides/9_Slides_picpuzzle.js?v11"></script>
+<script src="js/slides/10_Slides_gamefest.js?v11"></script>
+<script src="js/slides/11_Slides_job.js?v11"></script>
+
+<!-- Main Code -->
+<script src="js/main.js?v11"></script>

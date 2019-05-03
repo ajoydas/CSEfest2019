@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/lib/css/emoji.css" rel="stylesheet">
+
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="//cdn.rawgit.com/hilios/jQuery.countdown/2.2.0/dist/jquery.countdown.min.js"></script>
+
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<style>
+    {#.modal {#}
+    {#    max-width: 75% !important;#}
+    {#    max-height: 100% !important;#}
+    #}#}
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    img.center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #clock {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        color: #ff0000;
+        font-size: 20px;
+    }
+
+    #submit_form {
+        margin-top: 20px;
+    }
+
+    .label {
+        font-size: 16px;
+        color: black;
+    }
+
+    .emoji-wysiwyg-editor{ white-space: pre-wrap; }
+
+</style>
+<div class="row">
+
+    <div id="clock"></div>
+
+    <div class="col s12 m6 offset-m3">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+        <div id="title">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title" style="text-align: center">Answer sheet of {{ user.username }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form id="submit_form" role="form" class="form-horizontal" method="post"
+              action="{% url 'quiz:submission' user.pk %}">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                <div class="form-group{% if field.errors %} has-error{% endif %}">
+                    <label for="{{ field.label }}" class="col-sm-2 label">
+                        <i class="material-icons left">chevron_right</i>
+
+                        {{ field.label }}
+                    </label>
+                    <div class="col-sm-10">
+                        <p>
+                            {{ field }}
+                        </p>
+                        {% if field.help_text %}
+                            <span class="help-block">{{ field.help_text }}</span>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <label class="control-label">{{ error }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:2 %}
+                    <br/>
+                    <br/>
+                {% endif %}
+            {% endfor %}
+            <div class="center">
+                <button class="btn waves-effect waves-light" type="submit">
+                    Save
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </form>
+
+
+        <br/>
+
+        {#        <ul class="pagination center">#}
+        {##}
+        {#            {% for number in question_count %}#}
+        {#                {% if forloop.counter == current_question %}#}
+        {#                    <li>#}
+        {#                        <button type="submit" class="btn btn-primary" onclick="buttonClick({{ forloop.counter }})">#}
+        {#                            Set {{ forloop.counter }}</button>#}
+        {#                    </li>#}
+        {#                {% else %}#}
+        {#                    <li>#}
+        {#                        <button type="submit" class="btn grey" onclick="buttonClick({{ forloop.counter }})">#}
+        {#                            Set {{ forloop.counter }}</button>#}
+        {#                    </li>#}
+        {#                {% endif %}#}
+        {#            {% endfor %}#}
+        {##}
+        {#        </ul>#}
+
+        <!-- Modal Trigger -->
+
+        {#        <!-- Modal Structure -->#}
+        {#        <div id="modal1" class="modal">#}
+        {#            <div class="modal-content">#}
+        {#                <h4>Finish The Contest?</h4>#}
+        {#                <p>You want to submit current form and finish the contest?</p>#}
+        {#            </div>#}
+        {#            <div class="modal-footer">#}
+        {#                <button class="modal-close waves-effect waves-green btn-flat">No</button>#}
+        {#                <button class="modal-close waves-effect waves-green btn-flat" onclick="closedModal()">Yes</button>#}
+        {#                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>#}
+        {#            </div>#}
+        {#        </div>#}
+
+    </div>
+</div>
+
+<script src="/static/lib/js/config.js"></script>
+<script src="/static/lib/js/util.js"></script>
+<script src="/static/lib/js/jquery.emojiarea.js"></script>
+<script src="/static/lib/js/emoji-picker.js"></script>
+
+<script>
+    var nextYear = moment.utc("{{ end_time }}").local().format('YYYY/MM/DD HH:mm');
+
+    $('#clock').countdown(nextYear, function (event) {
+        $(this).html(event.strftime('Contest ends in %H hr: %M min: %S s'));
+    })
+        .on('finish.countdown', function (event) {
+            console.log("Finished count");
+            finishClick();
+        })
+        .on('stop.countdown', function (event) {
+            console.log("Stopped count");
+            finishClick();
+        });
+
+</script>
+
+<script>
+    $(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '/static/lib/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+    });
+</script>
+
+<script>
+
+    {#function createModal() {#}
+    {#    let Modalelem = document.querySelector('#modal1');#}
+    {#    let instance = M.Modal.init(Modalelem);#}
+    {#    instance.open();#}
+    {#}#}
+        {##}
+        {#function closedModal() {#}
+        {#    console.log("Closed modal");#}
+        {#    finishClick();#}
+        {#}#}
+            {##}
+            {#function buttonClick(val) {#}
+            {#    console.log(val);#}
+            {#    $("#submit_form").attr("action", "{% url 'quiz:question' current_question %}/" + val);#}
+            {#    $("#submit_form").submit()#}
+            {#}#}
+                {##}
+                {#function finishClick() {#}
+                {#    console.log("Clicked finished");#}
+                {#    $("#submit_form").submit()#}
+                {#}#}
+
+
+                    $(document).ready(function () {
+                        $('.materialboxed').materialbox();
+
+                        // Submit post on submit
+                        $('#submit_button').on('click', function (event) {
+                            event.preventDefault();
+                            let _html = "<!-- Modal Structure -->";
+                            _html += "<div class='modal-content center'>";
+                            _html += "<h4>You are best</h4>";
+                            _html += "<div><img src='/static/image/meme/hacking/hack1.jpg'></div>";
+                            _html += "</div>";
+                            _html += "<div class='modal-footer'>";
+                            _html += "<a href='#!' class='modal-close waves-effect waves-green btn-flat' >Close</a>";
+                            _html += "</div>";
+
+
+                            $('#error').ready(function () {
+                                options = {dismissible: true, onCloseEnd: closedModal};
+                                $('#modal1').empty();
+                                $('#modal1').append(_html);
+                                let Modalelem = document.querySelector('#modal1');
+                                let instance = M.Modal.init(Modalelem, options);
+                                instance.open();
+                            });
+
+                        });
+
+
+                        // This function gets cookie with a given name
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie != '') {
+                                let cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    let cookie = jQuery.trim(cookies[i]);
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+
+                        let csrftoken = getCookie('csrftoken');
+
+                        /*
+                        The functions below will create a header with csrftoken
+                        */
+
+                        function csrfSafeMethod(method) {
+                            // these HTTP methods do not require CSRF protection
+                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                        }
+
+                        function sameOrigin(url) {
+                            // test that a given url is a same-origin URL
+                            // url could be relative or scheme relative or absolute
+                            let host = document.location.host; // host + port
+                            let protocol = document.location.protocol;
+                            let sr_origin = '//' + host;
+                            let origin = protocol + sr_origin;
+                            // Allow absolute or scheme relative URLs to same origin
+                            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                                // or any other URL that isn't scheme relative or absolute i.e relative.
+                                !(/^(\/\/|http:|https:).*/.test(url));
+                        }
+
+                        $.ajaxSetup({
+                            beforeSend: function (xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                                    // Send the token to same-origin, relative URLs only.
+                                    // Send the token only if the method warrants CSRF protection
+                                    // Using the CSRFToken value acquired earlier
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
+                            }
+                        });
+
+                    })
+                    ;
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+django
+whitenoise
+python-decouple
+mysqlclient
+reportlab
+emojipy
+six

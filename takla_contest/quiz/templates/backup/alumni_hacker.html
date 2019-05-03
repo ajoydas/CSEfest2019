@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<div class="row">
+    <div class="col s12 m4 offset-m4">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+        {% if img_type == 1 %}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <p>ভাই আমার গার্লফ্রেন্ডের ফেইসবুক একাউন্টটা হ্যাক করে দিবা ?</p>
+                </li>
+            </ul>
+            <img class="materialboxed" width="480" height="300" src="{% static 'image/meme/hacking/hack1.jpg' %}" style="margin-top: 50px">
+        {% elif img_type == 2 %}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <p>স্যারা ভাই স্যারা.......... পুরা হ্যাকার</p>
+                </li>
+            </ul>
+            <img class="materialboxed" width="480" height="200" src="{% static 'image/meme/hacking/hack2.jpg' %}" style="margin-top: 50px">
+        {% elif img_type == 3 %}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <p>ও বাই ও বাই.......... স্যারা</p>
+                </li>
+            </ul>
+            <img class="materialboxed" width="480" height="200" src="{% static 'image/meme/hacking/hack3.jpg' %}" style="margin-top: 50px">
+        {% elif img_type == 4 %}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <p>স্যারা ভাই স্যারা.......... পুরা হ্যাকার</p>
+                </li>
+            </ul>
+            <img class="materialboxed" src="{% static 'image/meme/hacking/hack4.jpg' %}" style="margin-top: 50px">
+        {% elif img_type == 5 %}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <p><code>ping cute-hamster.com</code></p>
+                </li>
+            </ul>
+            <img class="materialboxed" width="480" height="300" src="{% static 'image/meme/hacking/hack5.jpg' %}" style="margin-top: 50px">
+        {% elif img_type == 6%}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <p>Ever wonder Freddie Mercury was also a black hat hacker like you</p>
+                </li>
+            </ul>
+            <img class="materialboxed" width="480" height="300" src="{% static 'image/meme/hacking/hack6.png' %}" style="margin-top: 50px">
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.materialboxed').materialbox();
+    });
+
+    $(document).ready(function () {
+        $('select').formSelect();
+    });
+</script>
+</body>
+</html>

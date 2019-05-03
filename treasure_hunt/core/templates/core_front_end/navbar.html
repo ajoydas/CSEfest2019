@@ -1,0 +1,19 @@
+{% load static %}
+
+<div class="navbar-fixed">
+    <nav class="blue-grey">
+        <div class="nav-wrapper">
+            <a href="{% url 'core:home' %}" class="left brand-logo">
+                <img class="navbar-fixed" src="{% static 'image/logo.png' %}" />
+            </a>
+            <ul class="right show-on-medium-and-down">
+                <li><a href="{% url 'hunt:leader_board' %}">Leader Board</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'core:logout_user' %}">Log Out</a></li>
+                {% else %}
+                    <li><a href="{% url 'core:login_user' %}">Log In</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

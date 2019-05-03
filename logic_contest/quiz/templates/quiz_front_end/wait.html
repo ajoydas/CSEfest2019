@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/counter.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="//cdn.rawgit.com/hilios/jQuery.countdown/2.2.0/dist/jquery.countdown.min.js"></script>
+
+
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<div class="row">
+    <div class="col s12 m6 offset-m3">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+
+
+        <div id="learn_more">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Wait</span>
+                    <p>The contest has not yet started.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="main-example">
+            <p>
+                The contest will begin in:
+            </p>
+            <div class="countdown-container center" id="main-example">
+            </div>
+        </div>
+        <script type="text/template" id="main-example-template">
+            <div class="time <%= label %>" style="max-width: 48px;max-height: 70px">
+                <span class="count curr top"><%= curr %></span>
+                <span class="count next top"><%= next %></span>
+                <span class="count next bottom"><%= next %></span>
+                <span class="count curr bottom"><%= curr %></span>
+                <span class="label"><%= label.length < 6 ? label : label.substr(0, 3)  %></span>
+            </div>
+        </script>
+        <script type="text/javascript">
+            $(window).on('load', function () {
+                var labels = ['days', 'hours', 'minutes', 'seconds'],
+                    {#nextYear = moment.utc("2019-01-20 14:00").local().format('YYYY/MM/DD HH:mm');#}
+                    nextYear = moment.utc("{{ start_time }}").local().format('YYYY/MM/DD HH:mm:ss'),
+                    template = _.template($('#main-example-template').html()),
+                    currDate = '00:00:00:00',
+                    nextDate = '00:00:00:00',
+                    parser = /([0-9]{2})/gi,
+                    $example = $('#main-example');
+
+                // Parse countdown string to an object
+                function strfobj(str) {
+                    var parsed = str.match(parser),
+                        obj = {};
+                    labels.forEach(function (label, i) {
+                        obj[label] = parsed[i]
+                    });
+                    return obj;
+                }
+
+                // Return the time components that diffs
+                function diff(obj1, obj2) {
+                    var diff = [];
+                    labels.forEach(function (key) {
+                        if (obj1[key] !== obj2[key]) {
+                            diff.push(key);
+                        }
+                    });
+                    return diff;
+                }
+
+                // Build the layout
+                var initData = strfobj(currDate);
+                labels.forEach(function (label, i) {
+                    $example.append(template({
+                        curr: initData[label],
+                        next: initData[label],
+                        label: label
+                    }));
+                });
+                // Starts the countdown
+                $example.countdown(nextYear, function (event) {
+                    var newDate = event.strftime('%d:%H:%M:%S'),
+                        data;
+                    if (newDate !== nextDate) {
+                        currDate = nextDate;
+                        nextDate = newDate;
+                        // Setup the data
+                        data = {
+                            'curr': strfobj(currDate),
+                            'next': strfobj(nextDate)
+                        };
+                        // Apply the new values to each node that changed
+                        diff(data.curr, data.next).forEach(function (label) {
+                            var selector = '.%s'.replace(/%s/, label),
+                                $node = $example.find(selector);
+                            // Update the node
+                            $node.removeClass('flip');
+                            $node.find('.curr').text(data.curr[label]);
+                            $node.find('.next').text(data.next[label]);
+                            // Wait for a repaint to then flip
+                            _.delay(function ($node) {
+                                $node.addClass('flip');
+                            }, 50, $node);
+                        });
+                    }
+                }).on('finish.countdown', function (event) {
+                    console.log("Finished count");
+                    finishClick();
+                }).on('stop.countdown', function (event) {
+                    console.log("Stopped count");
+                    finishClick();
+                });
+
+            });
+        </script>
+
+    </div>
+
+</div>
+<script>
+    function finishClick() {
+        location.reload();
+    }
+</script>
+
+</body>
+</html>

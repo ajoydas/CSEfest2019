@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+{% include 'core_front_end/navbar.html' %}
+
+<style>
+
+</style>
+<div class="row">
+    <div class="col s12 m6 offset-m3">
+        {% if messages %}
+            {% include 'core_front_end/toast_messages.html' %}
+        {% endif %}
+
+        <div>
+            <table class="centered highlight ">
+                <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>Marks</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td><a href="{% url 'quiz:submission' user.user.id %}">{{ user.user.username }}</a></td>
+                        <td>{{ user.marks }}</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <br/>
+            <ul class="pagination center">
+                <li class="waves-effect"><a href="?page=1"><i class="material-icons">first_page</i></a>
+                </li>
+
+                {% if users.paginator.num_pages < 5 %}
+                    {% for number in users.paginator.page_range %}
+                        {% if number == users.number %}
+                            <li class="active"><a href="?page={{ number }}">{{ number }}</a></li>
+                        {% else %}
+                            <li class="wave-effect"><a href="?page={{ number }}">{{ number }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if users.number|add:"2" in users.paginator.page_range and users.number|add:"-2" in users.paginator.page_range %}
+                        {# o o x o o #}
+                        <li class="waves-effect"><a href="?page={{ users.previous_page_number }}"><i
+                                class="material-icons">chevron_left</i></a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number|add:"-1" }}">{{ users.previous_page_number|add:"-1" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number }}">{{ users.previous_page_number }}</a></li>
+                        <li class="active"><a href="?page={{ users.number }}">{{ users.number }}</a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number }}">{{ users.next_page_number }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number|add:"1" }}">{{ users.next_page_number|add:"1" }}</a>
+                        </li>
+                        <li class="waves-effect"><a href="?page={{ users.next_page_number }}"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% endif %}
+                    {% if not users.number|add:"2" in users.paginator.page_range and users.has_next %}
+                        {# o o o x o #}
+                        <li class="waves-effect"><a href="?page={{ users.previous_page_number }}"><i
+                                class="material-icons">chevron_left</i></a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number|add:"-2" }}">{{ users.previous_page_number|add:"-2" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number|add:"-1" }}">{{ users.previous_page_number|add:"-1" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number }}">{{ users.previous_page_number }}</a></li>
+                        <li class="active"><a href="?page={{ users.number }}">{{ users.number }}</a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number }}">{{ users.next_page_number }}</a></li>
+                        <li class="waves-effect"><a href="?page={{ users.next_page_number }}"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% endif %}
+                    {% if not users.number|add:"-2" in users.paginator.page_range and users.has_next and users.has_previous %}
+                        {# o x o o o #}
+                        <li class="waves-effect"><a href="?page={{ users.previous_page_number }}"><i
+                                class="material-icons">chevron_left</i></a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number }}">{{ users.previous_page_number }}</a></li>
+                        <li class="active"><a href="?page={{ users.number }}">{{ users.number }}</a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number }}">{{ users.next_page_number }}</a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number|add:"1" }}">{{ users.next_page_number|add:"1" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number|add:"2" }}">{{ users.next_page_number|add:"2" }}</a>
+                        </li>
+                        <li class="waves-effect"><a href="?page={{ users.next_page_number }}"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% endif %}
+                    {% if not users.has_previous %}
+                        {# x o o o o #}
+                        <li class="disabled"><a href=""><i class="material-icons">chevron_left</i></a></li>
+                        <li class="active"><a href="?page={{ users.number }}">{{ users.number }}</a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number }}">{{ users.next_page_number }}</a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number|add:"1" }}">{{ users.next_page_number|add:"1" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number|add:"2" }}">{{ users.next_page_number|add:"2" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.next_page_number|add:"3" }}">{{ users.next_page_number|add:"3" }}</a>
+                        </li>
+                        <li class="waves-effect"><a href="?page={{ users.next_page_number }}"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% endif %}
+                    {% if not users.has_next %}
+                        {# o o o o x #}
+                        <li class="waves-effect"><a href="?page={{ users.previous_page_number }}"><i
+                                class="material-icons">chevron_left</i></a></li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number|add:"-3" }}">{{ users.previous_page_number|add:"-3" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number|add:"-2" }}">{{ users.previous_page_number|add:"-2" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number|add:"-1" }}">{{ users.previous_page_number|add:"-1" }}</a>
+                        </li>
+                        <li class="waves-effect"><a
+                                href="?page={{ users.previous_page_number }}">{{ users.previous_page_number }}</a></li>
+                        <li class="active"><a href="?page={{ users.number }}">{{ users.number }}</a></li>
+                        <li class="disabled"><a href=""><i class="material-icons">chevron_right</i></a></li>
+                    {% endif %}
+                {% endif %}
+
+                <li class="waves-effect"><a href="?page={{ users.paginator.num_pages }}"><i class="material-icons">last_page</i></a>
+                </li>
+
+            </ul>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

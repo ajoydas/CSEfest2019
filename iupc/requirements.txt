@@ -1,0 +1,6 @@
+django
+whitenoise
+python-decouple
+mysqlclient
+pandas
+xlrd

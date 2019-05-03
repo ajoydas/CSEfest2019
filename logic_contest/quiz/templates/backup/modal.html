@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'core_front_end/load_css.html' %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/toastr.min.css' %}" media="screen,projection"/>
+    <!--JS -->
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.core.min.js"></script>
+</head>
+
+<body>
+<style>
+    html, body {
+        min-height: 100%;
+    }
+
+    body {
+        margin: 40px;
+        padding: 0;
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/167792/mountains.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    button {
+        display: block;
+        margin: 5% auto 0;
+        background: transparent;
+        border: 2px solid #444;
+        padding: 5px 10px;
+    }
+
+    button.md-close {
+        margin-top: 40px;
+    }
+
+    .md-modal {
+        margin: auto;
+        position: fixed;
+        top: 20px;
+        left: 0;
+        right: 0;
+        width: 50%;
+        max-width: 630px;
+        min-width: 320px;
+        height: 100%;
+        z-index: 2000;
+        visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        overflow-y: initial !important
+    }
+
+    .md-show {
+        visibility: visible;
+    }
+
+    .md-overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        opacity: 0;
+        background: rgba(228, 240, 227, 0.8);
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .md-show ~ .md-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .md-effect-12 .md-content {
+        height: 100%;
+        -webkit-transform: scale(0.8);
+        -moz-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+        transform: scale(0.8);
+        opacity: 0;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .md-show.md-effect-12 ~ .md-overlay {
+        background-color: #e4f0e3;
+    }
+
+    .md-effect-12 .md-content h3,
+    .md-effect-12 .md-content {
+        background: transparent;
+    }
+
+    .md-show.md-effect-12 .md-content {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+
+</style>
+<h1>Full-screen modal window</h1>
+<button class="md-trigger" data-modal="modal-12">Show modal</button>
+
+<div class="md-modal md-effect-12">
+    <div class="md-content">
+        <div>
+            <h4>You are the best</h4>
+            <img style="max-height:50%;" src='/static/image/meme/hacking/hack1.jpg'/>
+            <button class="md-close">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="md-overlay"></div>
+<script>
+    $(function () {
+
+        $('.md-trigger').on('click', function () {
+            $('.md-modal').addClass('md-show');
+        });
+
+        $('.md-close').on('click', function () {
+            $('.md-modal').removeClass('md-show');
+        });
+
+    });
+</script>
+
+</body>
+</html>

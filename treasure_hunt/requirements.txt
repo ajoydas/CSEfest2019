@@ -1,0 +1,4 @@
+django
+whitenoise
+python-decouple
+mysqlclient

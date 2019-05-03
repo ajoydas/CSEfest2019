@@ -1,0 +1,62 @@
+<html>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/lib/css/emoji.css" rel="stylesheet">
+
+</head>
+<body>
+
+<form role="form" class="form-horizontal" method="post" action="{% url 'quiz:comment' %}">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+        <div class="form-group{% if field.errors %} has-error{% endif %}">
+            <label for="{{ field.label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+            <div class="col-sm-10">
+            <p class="lead emoji-picker-container">
+                {{ field }}
+            </p>
+                {% if field.help_text %}
+                    <span class="help-block">{{ field.help_text }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                    <label class="control-label">{{ error }}</label>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<!-- ** Don't forget to Add jQuery here ** -->
+<script src="/static/lib/js/config.js"></script>
+<script src="/static/lib/js/util.js"></script>
+<script src="/static/lib/js/jquery.emojiarea.js"></script>
+<script src="/static/lib/js/emoji-picker.js"></script>
+
+<script>
+    $(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '/static/lib/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+    });
+</script>
+</body>
+
+</html>
+
+
+
