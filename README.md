@@ -35,3 +35,7 @@ intended environment.
 - [Jacob D. Rozario](https://github.com/JakeShammo)
 - [Ajoy Das](https://ajoydas.com)
 
+
+**Automation of bulk emails**
+- [Samsad Sajid](https://github.com/SamsadSajid)
+- [Ajoy Das](https://ajoydas.com)
