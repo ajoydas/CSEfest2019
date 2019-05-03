@@ -13,9 +13,10 @@ The READMes bellow contain more details.
 - [Bulk Mail Details](bulk_mail/README.md)
 
 
-# Technologies The fest website is built with `Javascript`. 
-All other websites are built using `Django` framework. The automation
-tasks are done using `Python`.
+# Technologies 
+The fest website is built with `Javascript`. All other websites are
+built using `Django` framework. The automation tasks are done using
+`Python`.
 
 # Setup
 Evey website has an `.env` file. One has to use this file to setup their
