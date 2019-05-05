@@ -2,7 +2,7 @@
 This repo contains sources of the websites and systems implemented for
 **BUET CSE Fest 2019**.
 
-The READMes bellow contain more details. 
+The READMes bellow contain more details about each system. 
 - [Fest Website Details](fest_site/README.md)
 - [Picture Puzzle(Punzzle) Website Details](picture_puzzle/README.md)
 - [AI Contest Source Code Details](AI_contest/README.md)
@@ -19,7 +19,7 @@ built using `Django` framework. The automation tasks are done using
 `Python`.
 
 # Setup
-Evey website has an `.env` file. One has to use this file to setup their
+Every website has an `.env` file. One has to use this file to setup their
 intended environment.
 
 # Contributors 
